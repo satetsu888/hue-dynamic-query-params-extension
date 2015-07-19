@@ -1,5 +1,4 @@
-function set(yaml){
-    var params = jsyaml.load(yaml);
+function set(params){
 
     chrome.tabs.executeScript(null,{
         code:"var data =" + JSON.stringify(params),
@@ -15,9 +14,48 @@ function set(yaml){
 
 }
 
+function load(index){
+    var saved_params = _load_saved_params();
+
+    if(saved_params.length <= index){
+        index = 0;
+    }
+
+    return jsyaml.dump(saved_params[index]);
+}
+
+function save(params){
+    var saved_params = _load_saved_params();
+    saved_params.push(params);
+    localStorage['saved_params'] = JSON.stringify(saved_params);
+}
+
+function _load_saved_params(){
+    var storage_data = localStorage['saved_params'];
+    var saved_params;
+    if(storage_data === undefined){
+        saved_params = new Array();
+    } else {
+        saved_params = JSON.parse(storage_data);
+    }
+    return saved_params;
+}
+
+function parse_yaml(yaml){
+    return jsyaml.load(yaml);
+}
+
 $("#set_button").click(
     function(){
-        set($("#data")[0].value)
+        var params = parse_yaml($("#data")[0].value);
+        set(params);
+        save(params);
+    }
+);
+
+$("#load_button").click(
+    function(){
+        $("#data")[0].value = load(0);
     }
 );
 
