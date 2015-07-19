@@ -21,7 +21,11 @@ function load(index){
         index = saved_params.length - 1;
     }
 
-    return jsyaml.dump(saved_params[index]);
+    if(index >= 0){
+        return jsyaml.dump(saved_params[index]);
+    } else {
+        return '';
+    }
 }
 
 function save(params){
