@@ -17,14 +17,20 @@ function set(params){
 function load(index){
     var saved_params = _load_saved_params();
 
-    if(saved_params.length <= index){
-        index = 0;
+    if(index === undefined || saved_params.length <= index){
+        index = saved_params.length - 1;
     }
 
     return jsyaml.dump(saved_params[index]);
 }
 
 function save(params){
+    var saved_params = _load_saved_params();
+    saved_params[saved_params.length - 1] = params;
+    localStorage['saved_params'] = JSON.stringify(saved_params);
+}
+
+function save_as_new(params){
     var saved_params = _load_saved_params();
     saved_params.push(params);
     localStorage['saved_params'] = JSON.stringify(saved_params);
@@ -49,13 +55,9 @@ $("#set_button").click(
     function(){
         var params = parse_yaml($("#data")[0].value);
         set(params);
-        save(params);
+        save_as_new(params);
     }
 );
 
-$("#load_button").click(
-    function(){
-        $("#data")[0].value = load(0);
-    }
-);
+$("#data")[0].value = load();
 
