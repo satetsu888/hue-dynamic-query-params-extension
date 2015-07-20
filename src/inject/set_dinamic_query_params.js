@@ -11,7 +11,19 @@ function set(params){
             });
         });
     });
+}
 
+function set_param_skelton(element){
+
+    chrome.tabs.executeScript(null,{
+        file: "js/jquery.min.js"
+    }, function(){
+        chrome.tabs.executeScript(null,{
+            code: "var param_names=new Array();$('#execute-parameter-selection form fieldset .control-group').each(function(index, element){var param_name=element.children[0].innerText;param_names.push(param_name);}); param_names;"
+        }, function(result){
+           element.value = _create_skelton_params(result[0]);
+        });
+    });
 }
 
 function load(index){
@@ -28,7 +40,15 @@ function load(index){
     }
 }
 
-function save(params){
+function _create_skelton_params(param_names){
+    var obj = new Object();
+    for(var name of param_names){
+        obj[name] = '';
+    };
+    return jsyaml.dump(obj);
+}
+
+function save_temporary(params){
     var saved_params = _load_saved_params();
     saved_params[saved_params.length - 1] = params;
     localStorage['saved_params'] = JSON.stringify(saved_params);
@@ -63,5 +83,19 @@ $("#set_button").click(
     }
 );
 
-$("#data")[0].value = load();
+$("#data").keyup(
+    function(e){
+        var params = parse_yaml($("#data")[0].value);
+        save_temporary(params);
+    }
+);
+
+(function(){
+    var default_data = load();
+    if(default_data === ''){
+        set_param_skelton($("#data")[0]);
+    } else {
+        $("#data")[0].value = load();
+    }
+})()
 
