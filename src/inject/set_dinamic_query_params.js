@@ -28,7 +28,7 @@ function load(index){
     }
 }
 
-function save(params){
+function save_temporary(params){
     var saved_params = _load_saved_params();
     saved_params[saved_params.length - 1] = params;
     localStorage['saved_params'] = JSON.stringify(saved_params);
@@ -60,6 +60,13 @@ $("#set_button").click(
         var params = parse_yaml($("#data")[0].value);
         set(params);
         save_as_new(params);
+    }
+);
+
+$("#data").keyup(
+    function(e){
+        var params = parse_yaml($("#data")[0].value);
+        save_temporary(params);
     }
 );
 
