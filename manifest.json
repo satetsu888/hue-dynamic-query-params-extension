@@ -1,6 +1,6 @@
 {
   "name": "Hue Dynamic Query Params",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "manifest_version": 2,
   "description": "Set beeswax query editor's params with yaml format strings in Hue",
   "homepage_url": "https://github.com/satetsu888/hue-dynamic-query-params-extension",
